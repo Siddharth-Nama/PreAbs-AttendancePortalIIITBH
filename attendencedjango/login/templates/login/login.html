@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login Page</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans"
+      rel="stylesheet"
+    />
+    <link
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+      integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="../../static/login.css" />
+  </head>
+  <body>
+    <form id="login-form" method="post" action="http://127.0.0.1:8000/login/student/">
+        {% csrf_token %}
+        {% if messages %}
+        <div class="alert alert-primary custom-alert" role="alert">
+            {% for message in messages %}
+              {{ message }}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+    <div class="box-form">
+      <div class="left"></div>
+
+      <div class="right">
+        <h5 class="college-heading">IIIT Bhagalpur</h5>
+        <p style="color: rgb(40, 31, 31)">
+          Welcome to the IIIT Bhagalpur Attendance Portal. Please log in to
+          access your attendance records.
+        </p>
+        <div class="inputs" id="inputs">
+          <input type="text" id="roll_number" name="roll_number" placeholder="Roll no." required />
+          <br />
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="password"
+            pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
+            title="Password must be at least 8 characters long, include one uppercase letter, one lowercase letter, one number, and one special character."
+            required
+          />
+        </div>
+
+        <br /><br />
+
+        <div class="forget-password">
+          <a href="#" style="text-decoration: none">Forget password</a>
+        </div>
+        <p style="color: rgb(37, 35, 35)">
+          Don't have an account?
+          <a style="text-decoration: none" href="#"> Create Your Account</a> it
+          takes less than a minute
+        </p>
+
+        <br />
+        <button type="submit" class="btn" name="submit">Login</button>
+      </div>
+    </div>
+</form>
+<script>
+  document.getElementById('login-form').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent the default form submission
+
+      const formData = new FormData(this); // Create FormData from the form element
+
+      fetch('/login/student/', {
+          method: 'POST',
+          body: formData,
+          headers: {
+              'Accept': 'application/json',
+              // 'Content-Type': 'application/x-www-form-urlencoded' // Optional: Uncomment if required by backend
+          }
+      })
+      .then(response => {
+          if (response.ok) {
+              return response.json(); 
+          } else {
+              throw new Error('Network response was not ok'); 
+          }
+      })
+      .then(data => {
+          alert('Profile login successfully');
+          window.location.href = '/'; // Redirect after successful login
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          alert('Something went wrong: ' + error.message);
+      });
+  });
+</script>
+
+</body>
+</html>

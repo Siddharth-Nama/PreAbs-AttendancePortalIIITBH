@@ -4,11 +4,11 @@ import datetime
 
 # Model for Student
 class Student(models.Model):
-    name =models.CharField(max_length=100 )
-    password = models.CharField(max_length=1000)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
     roll_number = models.CharField(max_length=100, unique=True)
     def __str__(self):
-        return f"{self.name} - {self.roll_number}"
+        return f"{self.user.first_name} {self.user.last_name}  - {self.roll_number}"
     
     def get_attendance_by_subject(self):
         attendance_data = []
@@ -40,7 +40,7 @@ class Student(models.Model):
 # Model for Teacher
 class Teacher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-
+    
     def __str__(self):
         return f"{self.user.first_name} - {self.user.last_name}"
 

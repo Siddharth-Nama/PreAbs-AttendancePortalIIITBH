@@ -3,15 +3,20 @@ from .models import Student, Teacher, Subject, Attendance
 
 # ModelAdmin for Subject
 class SubjectAdmin(admin.ModelAdmin):
-    list_display = ('subjectname', 'coursecode')
+    list_display = ('subjectname', 'coursecode')  
     search_fields = ('subjectname', 'coursecode')
     list_filter = ('subjectname', 'coursecode')
 
 # ModelAdmin for Student
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('name','roll_number')
-    search_fields = ('name', 'roll_number')
-    list_filter = ('name', 'roll_number')
+    list_display = ('get_username', 'roll_number')
+    search_fields = ('user__username', 'roll_number', 'user__first_name')
+    list_filter = ('user__username', 'roll_number')
+
+    def get_username(self, obj):
+        return obj.user.username
+    get_username.admin_order_field = 'user__username'  
+    get_username.short_description = 'Username' 
     
 # ModelAdmin for Attendance
 class AttendanceAdmin(admin.ModelAdmin):

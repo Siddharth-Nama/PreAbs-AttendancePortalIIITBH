@@ -3,12 +3,27 @@ from django.contrib.auth.models import User
 import datetime
 
 # Model for Student
-class Student(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+class UserProfile(models.Model):
+    USER_TYPE_CHOICES = [
+        ('student', 'Student'),
+        ('teacher', 'Teacher'),
+    ]
 
-    roll_number = models.CharField(max_length=100, unique=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES)
+
     def __str__(self):
-        return f"{self.user.first_name} {self.user.last_name}  - {self.roll_number}"
+        return f"{self.user.username} - {self.user_type}"
+    
+
+class Student(models.Model):
+    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
+    roll_number = models.CharField(max_length=100, unique=True)
+    mobile = models.CharField(max_length=10, default='0123456789')
+    image = models.ImageField(upload_to='student_images',null=True , blank=True)
+
+    def __str__(self):
+        return f"{self.user.user.first_name} {self.user.user.last_name} - {self.roll_number}"
     
     def get_attendance_by_subject(self):
         attendance_data = []
@@ -39,10 +54,11 @@ class Student(models.Model):
 
 # Model for Teacher
 class Teacher(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    
+    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='teacher_images',null=True , blank=True)
+    mobile = models.CharField(max_length=10, default='0123456789')
     def __str__(self):
-        return f"{self.user.first_name} - {self.user.last_name}"
+         return f"{self.user.user.first_name} - {self.user.user.last_name}"
 
 # Model for Subject
 class Subject(models.Model):

@@ -5,5 +5,7 @@ from login.views import loginStudent
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('home.urls')),  
-    path('login/student/', loginStudent, name="login"), 
+    path('login/', loginStudent, name="login"), 
+    path('Student/', Student, name="Student"), 
+    path('Teacher/', Teacher, name="Teacher"), 
 ]

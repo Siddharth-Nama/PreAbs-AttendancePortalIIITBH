@@ -20,7 +20,7 @@
   </head>
   <body>
     <!-- Login Form -->
-    <form method="post" action="/login/student/"> 
+    <form method="post" action="/login/"> 
       {% csrf_token %}
       {% if messages %}
       <div class="alert alert-primary custom-alert" role="alert">
@@ -38,8 +38,16 @@
           <p style="color: rgb(40, 31, 31)">
             Welcome to the IIIT Bhagalpur Attendance Portal. Please log in to access your attendance records.
           </p>
+          <div style="align-items: center; justify-content: center; display: flex;">
+            <select class="select" style="padding: 7px;" id="usertype" name="usertype">
+              <option selected><-- Select User Type --></option>
+              <option value="student">Student</option>
+              <option value="teacher">Teacher</option>
+            </select>
+          </div>
+          
           <div class="inputs" id="inputs">
-            <input type="text" id="roll_number" name="roll_number" placeholder="Roll no." required />
+            <input type="text" id="email" name="email" placeholder="Email" required />
             <br />
             <input
               type="password"
@@ -51,8 +59,6 @@
               required
             />
           </div>
-
-          <br /><br />
 
           <div class="forget-password">
             <a href="#" style="text-decoration: none">Forgot password?</a>

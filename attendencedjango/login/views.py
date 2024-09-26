@@ -49,3 +49,52 @@ def loginStudent(request):
 def logout_page(request):
     logout(request)
     return redirect('/login/')
+
+
+def newRegistration(request):
+    if request.method == 'POST':
+        
+        first_name = request.POST.get('fname')
+        last_name = request.POST.get('lname')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        email = request.POST.get('email')
+        roll_number = request.POST.get('rollno') 
+        mobile = request.POST.get('mobile')
+        if not username:
+            messages.error(request, "Username is required")
+            return redirect('/newRegistration/')
+
+        if User.objects.filter(username=username).exists():
+            messages.info(request, "Username already taken")
+            return redirect('/newRegistration/')
+
+        # Create the User object
+        user = User.objects.create_user(username=username, password=password)
+        user.first_name = first_name
+        user.last_name = last_name
+        user.email = email
+        user.save()
+
+        # Create the UserProfile linked to the user
+        user_profile = UserProfile.objects.create(
+            user=user,
+            user_type='student' 
+        )
+
+        # Create the Student profile 
+        student = Student.objects.create(
+            user=user_profile,  # Linked to UserProfile, not User
+            roll_number=roll_number,  
+            mobile=mobile,
+            image=None  
+        )
+
+        # Save both models
+        user_profile.save()
+        student.save()
+
+        messages.info(request, "Account created successfully")
+        return redirect('/login/')
+
+    return render(request, 'login/register.html')

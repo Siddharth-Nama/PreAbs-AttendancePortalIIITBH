@@ -5,8 +5,8 @@ import datetime
 # Model for Student
 class UserProfile(models.Model):
     USER_TYPE_CHOICES = [
-        ('student', 'Student'),
-        ('teacher', 'Teacher'),
+        ('student', 'student'),
+        ('teacher', 'teacher'),
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)

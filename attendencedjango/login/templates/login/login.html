@@ -22,14 +22,7 @@
     <!-- Login Form -->
     <form method="post" action="/login/"> 
       {% csrf_token %}
-      {% if messages %}
-      <div class="alert alert-primary custom-alert" role="alert">
-        {% for message in messages %}
-          {{ message }}
-        {% endfor %}
-      </div>
-      {% endif %}
-
+      
       <div class="box-form">
         <div class="left"></div>
 
@@ -38,6 +31,14 @@
           <p style="color: rgb(40, 31, 31)">
             Welcome to the IIIT Bhagalpur Attendance Portal. Please log in to access your attendance records.
           </p>
+          {% if messages %}
+      <div class="alert alert-primary custom-alert" role="alert">
+        {% for message in messages %}
+          {{ message }}
+        {% endfor %}
+      </div>
+      {% endif %}
+
           <div style="align-items: center; justify-content: center; display: flex;">
             <select class="select" style="padding: 7px;" id="usertype" name="usertype">
               <option selected><-- Select User Type --></option>
@@ -54,18 +55,16 @@
               id="password"
               name="password"
               placeholder="Password"
-              pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
-              title="Password must be at least 8 characters long, include one uppercase letter, one lowercase letter, one number, and one special character."
               required
             />
           </div>
 
           <div class="forget-password">
-            <a href="#" style="text-decoration: none">Forgot password?</a>
+            <a href="{% url 'password_reset' %}" style="text-decoration: none">Forgot password?</a>
           </div>
           <p style="color: rgb(37, 35, 35)">
             Don't have an account?
-            <a style="text-decoration: none" href="#">Create Your Account</a> it takes less than a minute.
+            <a style="text-decoration: none" href="/newRegistration/">Create Your Account</a> it takes less than a minute.
           </p>
 
           <br />

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <!-- Design by foolishdeveloper.com -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>New Registration</title>
+    <link rel="stylesheet" href="../../static/register.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="registration_form">
+        <div class="title">New Registration</div>
+
+        <form method="post" action="/newRegistration/">
+          {% csrf_token %} {% if messages %}
+          <div class="alert alert-primary custom-alert" role="alert">
+            {% for message in messages %} {{ message }} {% endfor %}
+          </div>
+          {% endif %}
+          <div class="form_wrap">
+            <div class="input_wrap">
+              <label for="username">Username</label>
+              <input type="text" id="username" name="username" required/>
+            </div>
+
+            <div class="input_wrap">
+              <label for="email">Email Address</label>
+              <input type="text" id="email" name="email" required/>
+            </div>
+
+            <div class="input_wrap">
+              <label for="password">Password</label>
+              <input type="password" id="password" name="password" required />
+            </div>
+
+            <div class="input_grp">
+              <div class="input_wrap">
+                <label for="fname">First Name</label>
+                <input type="text" id="fname" name="fname" required/>
+              </div>
+              <div class="input_wrap">
+                <label for="lname">Last Name</label>
+                <input type="text" id="lname" name="lname" required/>
+              </div>
+            </div>
+
+            <div class="input_wrap">
+              <label for="rollno">Roll No.</label>
+              <input type="text" id="rollno" name="rollno" required/>
+            </div>
+
+            <div class="input_wrap">
+              <label for="mobile">Mobile No.</label>
+              <input
+                type="text"
+                id="mobile"
+                name="mobile"
+                placeholder="Without Country Code"
+                maxlength="10"
+                pattern="\d{10}"
+                title="Mobile number must be exactly 10 digits"
+                required
+              />
+            </div>
+            
+
+            <div class="input_wrap" style="margin-top: 10px">
+              <input type="submit" value="Register Now" class="submit_btn" />
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

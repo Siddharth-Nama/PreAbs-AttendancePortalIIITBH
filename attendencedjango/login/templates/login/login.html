@@ -20,7 +20,7 @@
   </head>
   <body>
     <!-- Login Form -->
-    <form method="post" action="/login/"> 
+    <form method="post" action="/accounts/login/"> 
       {% csrf_token %}
       
       <div class="box-form">
@@ -66,7 +66,7 @@
             Don't have an account?
             <a style="text-decoration: none" href="/newRegistration/">Create Your Account</a> it takes less than a minute.
           </p>
-
+          
           <br />
           <button type="submit" class="btn" name="submit">Login</button>
         </div>

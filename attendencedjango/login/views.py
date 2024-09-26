@@ -32,23 +32,23 @@ def loginStudent(request):
                 return redirect('/')
             else:
                 messages.error(request, "Invalid password")
-                return redirect('/login/')
+                return redirect('/accounts/login/')
         
         except User.DoesNotExist:
             messages.error(request, "User with this email does not exist")
-            return redirect('/login/')
+            return redirect('/accounts/login/')
         except UserProfile.DoesNotExist:
             messages.error(request, "Invalid user type")
-            return redirect('/login/')
+            return redirect('/accounts/login/')
         except (Student.DoesNotExist, Teacher.DoesNotExist):
             messages.error(request, "No matching student or teacher found")
-            return redirect('/login/')
+            return redirect('/accounts/login/')
 
     return render(request, 'login/login.html')
 
 def logout_page(request):
     logout(request)
-    return redirect('/login/')
+    return redirect('/accounts/login/')
 
 
 def newRegistration(request):
@@ -67,6 +67,10 @@ def newRegistration(request):
 
         if User.objects.filter(username=username).exists():
             messages.info(request, "Username already taken")
+            return redirect('/newRegistration/')
+        
+        if User.objects.filter(roll_number=roll_number).exists():
+            messages.info(request, "Roll Number already taken")
             return redirect('/newRegistration/')
 
         # Create the User object
@@ -95,6 +99,6 @@ def newRegistration(request):
         student.save()
 
         messages.info(request, "Account created successfully")
-        return redirect('/login/')
+        return redirect('/accounts/login/')
 
     return render(request, 'login/register.html')

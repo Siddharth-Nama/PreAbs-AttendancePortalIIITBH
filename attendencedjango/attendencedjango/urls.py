@@ -5,7 +5,7 @@ from login.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('home.urls')),  
-    path('login/', loginStudent, name="login"),
+    path('accounts/login/', loginStudent, name="loginStudent"),
     path('newRegistration/', newRegistration, name="newRegistration"),
     re_path('^', include('django.contrib.auth.urls')),
 ]

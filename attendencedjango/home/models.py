@@ -21,7 +21,7 @@ class Student(models.Model):
     roll_number = models.CharField(max_length=100, unique=True)
     mobile = models.CharField(max_length=10, default='0123456789')
     image = models.ImageField(upload_to='student_images',null=True , blank=True)
-
+    gender = models.CharField(max_length=10,default='male', choices=[('male','male'),('female','female'),('other','other')])
     def __str__(self):
         return f"{self.user.user.first_name} {self.user.user.last_name} - {self.roll_number}"
     
@@ -57,6 +57,7 @@ class Teacher(models.Model):
     user = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='teacher_images',null=True , blank=True)
     mobile = models.CharField(max_length=10, default='0123456789')
+    gender = models.CharField(max_length=10,default='male', choices=[('male','male'),('female','female'),('other','other')])
     def __str__(self):
          return f"{self.user.user.first_name} - {self.user.user.last_name}"
 

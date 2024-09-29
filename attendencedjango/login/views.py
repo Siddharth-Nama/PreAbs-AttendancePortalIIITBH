@@ -12,28 +12,23 @@ def loginStudent(request):
         print(f"Received password: {password}")
         print(f"Received usertype: {usertype}")
 
-        
         try:
-            # First, query the User model via email
             user = User.objects.get(email=email)
             user_profile = UserProfile.objects.get(user=user, user_type=usertype)
 
-            # Then check if the user is a student or a teacher
-            if usertype == "student":
-                student = Student.objects.get(user=user_profile)
-            elif usertype == "teacher":
-                teacher = Teacher.objects.get(user=user_profile)
-            
-            # Authenticate using the user's username and password
             user = authenticate(username=user.username, password=password)
 
             if user is not None:
                 login(request, user)
-                return redirect('/')
+
+                if usertype == "student":
+                    return redirect('/StudentSection/')
+                elif usertype == "teacher":
+                    return redirect('/TeacherSection/')
             else:
                 messages.error(request, "Invalid password")
                 return redirect('/accounts/login/')
-        
+
         except User.DoesNotExist:
             messages.error(request, "User with this email does not exist")
             return redirect('/accounts/login/')

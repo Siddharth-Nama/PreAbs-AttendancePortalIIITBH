@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - Attendance System</title>
+    <link rel="stylesheet" href="./../static/teacherhomepage.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Hamburger icon for mobile -->
+        <div class="hamburger" id="hamburger">
+            <i class="fa-thin fa-bars"></i>
+        </div>
+
+        <aside class="sidebar" id="sidebar">
+            <div class="logo">
+                <h2>AttendancePro</h2>
+            </div>
+            <ul class="menu">
+                <li><a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#"><i class="fas fa-qrcode"></i> Generate QR Code</a></li>
+                <li><a href="#"><i class="fas fa-list"></i> View Attendance</a></li>
+                <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <h1>Welcome, Teacher!</h1>
+                <p>Select a class below to generate the QR code for attendance.</p>
+            </header>
+            
+            <section class="qr-code-section">
+                <form class="qr-form" action="/generate-qr" method="POST">
+                    <label for="class-select">Select Class</label>
+                    <select id="class-select" name="class">
+                        <option value="CSE_101">CSE 101</option>
+                        <option value="CSE_102">CSE 102</option>
+                        <option value="CSE_103">CSE 103</option>
+                    </select>
+                    <button type="submit" class="generate-btn">Generate QR Code</button>
+                </form>
+                <div id="qr-code-display" class="qr-code-display">
+                    <!-- Generated QR Code will appear here -->
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="./../static/js/teacherhomepage.js"></script>
+</body>
+</html>

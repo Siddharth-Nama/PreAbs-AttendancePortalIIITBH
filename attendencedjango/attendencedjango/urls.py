@@ -6,6 +6,7 @@ from students.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('home.urls')),  
+    path('Teacher/', include('teacher.urls')),  
     path('accounts/login/', loginStudent, name="loginStudent"),
     path('newRegistration/', newRegistration, name="newRegistration"),
     path('TeacherSection/', TeacherSection, name="TeacherSection"),

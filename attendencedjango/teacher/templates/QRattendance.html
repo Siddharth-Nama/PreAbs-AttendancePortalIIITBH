@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Attendance</title>
+    <link rel="stylesheet" href="{% static 'QRattendance.css' %}" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>QR Code for {{ subjectname }}-({{ coursecode }})</h1>
+      <p>Below is the QR code generated for the selected subject:</p>
+
+      <!-- Display the QR code -->
+      <img
+        id="qr-image"
+        src="data:image/png;base64,{{ qr_code|safe }}"
+        alt="QR Code for {{ coursecode }}"
+      />
+
+      <!-- Button to share through WhatsApp -->
+      <button id="share-whatsapp-btn" onclick="shareWhatsApp()">
+        Share on WhatsApp
+      </button>
+
+      <!-- Countdown Timer -->
+      <p id="timer"></p>
+
+      <!-- Button to manually stop QR code scanning -->
+      <button id="stop-qr-btn" onclick="stopQR()">Stop QR Code</button>
+    </div>
+
+    <script>
+      // Set the expiry time for 60 minutes (3600 seconds)
+      let expiryTime = 3600;
+      let timerElement = document.getElementById("timer");
+      let qrImage = document.getElementById("qr-image");
+      let interval = setInterval(updateTimer, 1000);
+
+      function updateTimer() {
+        if (expiryTime > 0) {
+          expiryTime--;
+          let minutes = Math.floor(expiryTime / 60);
+          let seconds = expiryTime % 60;
+          timerElement.textContent = `Time left: ${minutes}m ${seconds}s`;
+        } else {
+          clearInterval(interval);
+          qrImage.style.display = "none";
+          timerElement.textContent = "QR Code is no longer valid.";
+        }
+      }
+
+      function stopQR() {
+        clearInterval(interval);
+        qrImage.style.display = "none";
+        timerElement.textContent =
+          "QR Code scanning has been stopped manually.";
+      }
+
+      function shareWhatsApp() {
+    const subjectName = '{{ subjectname|safe }}';
+    const courseCode = '{{ coursecode }}';
+    const serverLink = 'http://127.0.0.1:8000/Teacher/';  // Development server link
+    
+    const message = encodeURIComponent(
+        `Mark your attendance for '${subjectName}' (Code: ${courseCode}) on the IIITBH attendance portal.\n\nAttendance Portal Link:\n${serverLink}`
+    );
+
+    const whatsappUrl = `https://wa.me/?text=${message}`;
+    window.open(whatsappUrl, '_blank');
+}
+
+    </script>
+  </body>
+</html>

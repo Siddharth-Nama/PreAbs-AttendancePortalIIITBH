@@ -1,11 +1,37 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudentSection</title>
+    <title>Student Homepage</title>
+    <link rel="stylesheet" href="../static/studenthomepage.css">
 </head>
 <body>
-    Hi Student
+    <div class="container">
+        {% csrf_token %}
+        <h2>Hi, {{ first_name }} !</h2>
+        <p class="instruction">Please enter the class code provided by your teacher to submit your attendance.</p>
+        <form action="{% url 'StudentSection' %}" method="POST">
+            {% csrf_token %}
+            <div class="message-box">
+                {% if messages %}
+                    {% for message in messages %}
+                        <p class="message {{ message.tags }}">{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="input-group">
+                <label for="class_code">Enter Class Code:</label>
+                <input type="text" id="class_code" name="class_code" placeholder="Enter your unique class code" required>
+            </div>
+            <div class="button-group">
+                <button type="submit" class="submit-btn">Submit</button>
+            </div>
+        </form>
+
+        
+    </div>
 </body>
 </html>

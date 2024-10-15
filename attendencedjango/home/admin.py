@@ -1,5 +1,9 @@
 from django.contrib import admin
 from .models import *
+from datetime import datetime
+from django.db.models import Q
+from django.utils.html import format_html
+
 
 # ModelAdmin for Subject
 class SubjectAdmin(admin.ModelAdmin):
@@ -83,9 +87,16 @@ class UserProfileAdmin(admin.ModelAdmin):
         return qs.select_related('user')
 
 
+
+class ClassSessionAdmin(admin.ModelAdmin):
+    list_display = ('code', 'subject', 'teacher', 'created_at', 'expires_at')
+    list_filter = ('subject', 'teacher', 'created_at', 'expires_at')
+    search_fields = ('subject__subjectname', 'teacher__user__user__first_name', 'teacher__user__user__last_name', 'code', 'created_at')    
+
 # Register the models with the admin site
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Teacher, TeacherAdmin)
 admin.site.register(Subject, SubjectAdmin)
 admin.site.register(Attendance, AttendanceAdmin)
 admin.site.register(UserProfile,UserProfileAdmin)
+admin.site.register(ClassSession,ClassSessionAdmin)

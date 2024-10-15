@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'attendencePageforTeacher.css' %}" />
+    <title>Unique Code Display</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Unique Code for  {{ subjectname }} - {{ coursecode }}</h1>
+      <p>Below is the unique code generated for the selected subject:</p>
+      <div class="unique-code" id="uniqueCode">{{ unique_code }}</div>
+      <div class="button-container">
+        <button id="shareButton" class="share-button">Share on WhatsApp</button>
+      </div>
+      <p id="timer">Time left: <span id="time">59m 59s</span></p>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+  <script>
+    let timerDuration = 59 * 60 + 59; // 59 minutes 59 seconds in seconds
+    let timerInterval;
+
+    const startTimer = () => {
+      timerInterval = setInterval(() => {
+        if (timerDuration <= 0) {
+          clearInterval(timerInterval);
+          alert("Time's up!");
+          return;
+        }
+
+        timerDuration--;
+
+        const minutes = Math.floor(timerDuration / 60);
+        const seconds = timerDuration % 60;
+        document.getElementById("time").textContent = `${minutes}m ${seconds}s`;
+      }, 1000);
+    };
+
+    document.getElementById("shareButton").onclick = function () {
+            const uniqueCode = document.getElementById("uniqueCode").textContent;
+            const subjectName = "{{ subjectname }}"; 
+            const courseCode = "{{ coursecode }}";
+            const attendanceLink = "http://google.com";
+
+            // Create custom WhatsApp message with a descriptive clickable link
+            const customMessage = `Dear student, mark your attendance for today's class on **${subjectName} - ${courseCode}**. \n\nThe unique code is: *${uniqueCode}*. \n\nClick here to go to the IIIT Bhagalpur attendance portal: ${attendanceLink}.\n\nBest regards,\nIIITBH Attendance Portal`;
+
+            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(customMessage)}`;
+            window.open(whatsappUrl, "_blank");
+        };
+
+    startTimer();
+  </script>
+</html>

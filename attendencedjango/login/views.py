@@ -3,6 +3,9 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from home.models import *
 
+def home(request):
+    return redirect('/accounts/login/')
+
 def loginStudent(request):
     if request.method == 'POST':
         email = request.POST.get('email')

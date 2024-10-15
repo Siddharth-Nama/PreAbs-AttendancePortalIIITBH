@@ -5,8 +5,10 @@ from teacher.views import *
 from students.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('',home,name="home"),
     path('api/', include('home.urls')),  
     path('Teacher/', include('teacher.urls')),  
+    path('Teacher/', include('students.urls')),  
     path('accounts/login/', loginStudent, name="loginStudent"),
     path('newRegistration/', newRegistration, name="newRegistration"),
     path('TeacherSection/', TeacherSection, name="TeacherSection"),

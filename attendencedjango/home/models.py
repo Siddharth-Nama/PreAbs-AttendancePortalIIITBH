@@ -82,10 +82,24 @@ class Subject(models.Model):
 
 # Model for Attendance
 class Attendance(models.Model):
+    STATUS_CHOICES = [
+        ('Present', 'Present'),
+        ('Absent', 'Absent'),
+        ('Pending', 'Pending'),
+    ]
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     date = models.DateField(default=datetime.date.today)
-    status = models.CharField(max_length=10, choices=[('Present', 'Present'), ('Absent', 'Absent')])
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')  # Default to 'Pending'
+    teacher_approved = models.BooleanField(default=False)  # Teacher approval flag
     timestamp = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return f"{self.student.roll_number} - {self.subject.subjectname} - {self.date}"
+
+
+class ClassSession(models.Model):
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)  
+    code = models.CharField(max_length=6, unique=True) 
+    created_at = models.DateTimeField(auto_now_add=True)  
+    expires_at = models.DateTimeField()

@@ -1,92 +1,107 @@
 /* Container for the form and messages */
 .container {
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Greeting message */
 h2 {
-    font-size: 1.8em;
-    margin-bottom: 10px;
-    color: #333;
+  font-size: 1.8em;
+  margin-bottom: 10px;
+  color: #333;
 }
 
 /* Instruction message */
 .instruction {
-    font-size: 1.1em;
-    margin-bottom: 20px;
-    color: #777;
+  font-size: 1.1em;
+  margin-bottom: 20px;
+  color: #777;
 }
 
 /* Form heading */
 h1 {
-    font-size: 2em;
-    margin-bottom: 20px;
-    color: #333;
+  font-size: 2em;
+  margin-bottom: 20px;
+  color: #333;
 }
 
 /* Input group styles */
 .input-group {
-    margin-bottom: 20px;
-    text-align: left;
+  margin-bottom: 20px;
+  text-align: left;
 }
 
 .input-group label {
-    font-size: 1.2em;
-    color: #555;
+  font-size: 1.2em;
+  color: #555;
 }
 
 .input-group input {
-    width: 100%;
-    padding: 10px;
-    margin-top: 8px;
-    font-size: 1em;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 /* Button styles */
 .button-group {
-    text-align: center;
+  text-align: center;
 }
 
 .submit-btn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1.2em;
-    transition: background-color 0.3s ease;
+  background-color: #4caf50;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.2em;
+  transition: background-color 0.3s ease;
 }
 
 .submit-btn:hover {
-    background-color: #45a049;
+  background-color: #45a049;
 }
 
 /* Message box styles */
 .message-box {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 .message {
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
 }
 
 .message.success {
-    background-color: #adf2af;
-    color: black;
+  background-color: #adf2af;
+  color: black;
 }
 
 .message.error {
-    background-color: #f44336;
-    color: white;
+  background-color: #f44336;
+  color: white;
+}
+
+.refresh-button {
+  padding: 10px 20px;
+  font-size: 18px;
+  color: white;
+  background-color: green; /* Green button */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.refresh-button:hover {
+  background-color: darkgreen; /* Darker shade on hover */
 }

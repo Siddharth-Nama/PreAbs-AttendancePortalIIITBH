@@ -37,9 +37,26 @@ class StudentAdmin(admin.ModelAdmin):
     
 # ModelAdmin for Attendance
 class AttendanceAdmin(admin.ModelAdmin):
-    list_display = ('student', 'subject', 'date', 'status')
-    search_fields = ('student__user__username', 'student__roll_number', 'subject__subjectname', 'date')
-    list_filter = ('subject', 'status', 'date')
+    list_display = (
+        'student', 
+        'get_class_session_code',  
+        'subject', 
+        'date', 
+        'status'
+    )
+    
+    search_fields = (
+        'student__roll_number',
+        'subject__subjectname',
+        'date',
+        'class_session__code', 
+    )
+    
+    list_filter = ('subject', 'status', 'date', 'class_session') 
+
+    def get_class_session_code(self, obj):
+        return obj.class_session.code if obj.class_session else 'N/A'
+    get_class_session_code.short_description = 'Class Session Code'
 
 # ModelAdmin for Teacher
 class TeacherAdmin(admin.ModelAdmin):

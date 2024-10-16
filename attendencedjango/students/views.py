@@ -20,14 +20,16 @@ def StudentSection(request):
                 return redirect('submit_code')
 
             student = request.user.userprofile.student
-
+            class_session = ClassSession.objects.get(code=code)
+    
             # Create a pending attendance request
             Attendance.objects.create(
                 student=student,
                 subject=session.subject,
                 status='Pending',  # Set status as Pending
-                date=datetime.date.today()
-                )
+                date=datetime.date.today(),
+                class_session=class_session  # Use the retrieved class session
+              )
             messages.success(request, 'Attendance request submitted! Awaiting teacher approval.')
 
         except ClassSession.DoesNotExist:

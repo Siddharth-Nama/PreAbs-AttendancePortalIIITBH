@@ -8,8 +8,9 @@
     <title>Unique Code Display</title>
   </head>
   <body>
+    {% csrf_token %}
     <div class="container">
-      <h1>Unique Code for  {{ subjectname }} - {{ coursecode }}</h1>
+      <h1>Unique Code for {{ subjectname }} - {{ coursecode }}</h1>
       <p>Below is the unique code generated for the selected subject:</p>
       <div class="unique-code" id="uniqueCode">{{ unique_code }}</div>
       <div class="button-container">
@@ -17,41 +18,52 @@
       </div>
       <p id="timer">Time left: <span id="time">59m 59s</span></p>
     </div>
-
-    <script src="script.js"></script>
+    <script>
+      var alertMessage = "{{ alert_message|escapejs }}";
+      if (alertMessage != 'None') {
+        alert(alertMessage);
+      }
+    </script>
   </body>
   <script>
-    let timerDuration = 59 * 60 + 59; // 59 minutes 59 seconds in seconds
-    let timerInterval;
+    // Set the initial countdown time (1 hour = 3600 seconds)
+    let expiryTime = 3599;
 
-    const startTimer = () => {
-      timerInterval = setInterval(() => {
-        if (timerDuration <= 0) {
-          clearInterval(timerInterval);
-          alert("Time's up!");
-          return;
-        }
+    function updateTimer() {
+      if (expiryTime > 0) {
+        let minutes = Math.floor(expiryTime / 60);
+        let seconds = expiryTime % 60;
 
-        timerDuration--;
+        // Display timer
+        document.getElementById(
+          "timer"
+        ).innerHTML = `Time remaining: ${minutes}m ${seconds}s`;
 
-        const minutes = Math.floor(timerDuration / 60);
-        const seconds = timerDuration % 60;
-        document.getElementById("time").textContent = `${minutes}m ${seconds}s`;
-      }, 1000);
-    };
+        // Decrease the time remaining
+        expiryTime--;
+      } else {
+        // Timer expired
+        document.getElementById("timer").innerHTML = "Session has expired.";
+      }
+    }
 
+    // Update the timer every second
+    setInterval(updateTimer, 1000);
+  </script>
+
+  <script>
     document.getElementById("shareButton").onclick = function () {
-            const uniqueCode = document.getElementById("uniqueCode").textContent;
-            const subjectName = "{{ subjectname }}"; 
-            const courseCode = "{{ coursecode }}";
-            const attendanceLink = "http://google.com";
-
-            // Create custom WhatsApp message with a descriptive clickable link
-            const customMessage = `Dear student, mark your attendance for today's class on **${subjectName} - ${courseCode}**. \n\nThe unique code is: *${uniqueCode}*. \n\nClick here to go to the IIIT Bhagalpur attendance portal: ${attendanceLink}.\n\nBest regards,\nIIITBH Attendance Portal`;
-
-            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(customMessage)}`;
-            window.open(whatsappUrl, "_blank");
-        };
+      const uniqueCode = document.getElementById("uniqueCode").textContent;
+      const subjectName = "{{ subjectname }}";
+      const courseCode = "{{ coursecode }}";
+      const attendanceLink = "http://google.com";
+      // Create custom WhatsApp message with a descriptive clickable link
+      const customMessage = `Dear student, mark your attendance for today's class on **${subjectName} - ${courseCode}**. \n\nThe unique code is: *${uniqueCode}*. \n\nClick here to go to the IIIT Bhagalpur attendance portal: ${attendanceLink}.\n\nBest regards,\nIIITBH Attendance Portal`;
+      const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(
+        customMessage
+      )}`;
+      window.open(whatsappUrl, "_blank");
+    };
 
     startTimer();
   </script>

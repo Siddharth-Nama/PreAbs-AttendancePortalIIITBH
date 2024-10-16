@@ -27,7 +27,10 @@ def generate_unique_code():
 def attendanceSubject(request):
     if request.method == "POST":
         coursecode = request.POST.get("class")
-
+        alert_message = None
+        expiry_time = None
+        unique_code = None  
+        subjectname = None
         if coursecode == '0':
             subjects = Subject.objects.all()
             messages.error(request, "Please select a valid subject.")
@@ -40,11 +43,8 @@ def attendanceSubject(request):
             messages.error(request, "Invalid subject selection.")
             return redirect('TeacherSection')
 
-        # Generate a 6-digit code
-        unique_code = generate_unique_code()
-
-        # Calculate expiry time (e.g., 1 hour from now)
-        expiry_time = timezone.now() + timedelta(hours=1)
+        # Get current time
+        current_time = timezone.now()
 
         try:
             user_profile = UserProfile.objects.get(user=request.user)
@@ -53,15 +53,35 @@ def attendanceSubject(request):
             messages.error(request, "Teacher account not found.")
             return redirect('TeacherSection')
 
-        class_session = ClassSession.objects.create(
-            subject=subject,
+        # Check if there is an existing active session
+        existing_session = ClassSession.objects.filter(
+            subject=subject, 
             teacher=teacher,
-            code=unique_code,
-            expires_at=expiry_time 
-        )
+            expires_at__gt=current_time 
+        ).first()
 
+        if existing_session:
+            # If an active session exists, return the existing code
+            unique_code = existing_session.code
+            alert_message = 'An active session already exists for this subject.'
+        else:
+            # No active session, generate a new code
+            unique_code = generate_unique_code()
+
+            # Calculate expiry time (e.g., 1 hour from now)
+            expiry_time = current_time + timedelta(hours=1)
+
+            # Create a new class session
+            class_session = ClassSession.objects.create(
+                subject=subject,
+                teacher=teacher,
+                code=unique_code,
+                expires_at=expiry_time
+            )
         return render(request, 'attendencePageforTeacher.html', {
             'subjectname': subjectname,
             'coursecode': coursecode,
             'unique_code': unique_code,  
+            'alert_message': alert_message, 
+            'expiry_time': expiry_time,
         })

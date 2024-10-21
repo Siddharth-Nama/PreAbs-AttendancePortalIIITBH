@@ -9,6 +9,33 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>New Registration</title>
     <link rel="stylesheet" href="../../static/register.css" />
+    <script>
+      // Function to trim input values before form submission
+      function trimInputValues() {
+        const usernameInput = document.getElementById('username');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const fnameInput = document.getElementById('fname');
+        const lnameInput = document.getElementById('lname');
+        const rollnoInput = document.getElementById('rollno');
+
+        // Trim leading and trailing spaces for each input
+        usernameInput.value = usernameInput.value.trim();
+        emailInput.value = emailInput.value.trim();
+        passwordInput.value = passwordInput.value.trim();
+        fnameInput.value = fnameInput.value.trim();
+        lnameInput.value = lnameInput.value.trim();
+        rollnoInput.value = rollnoInput.value.trim();
+      }
+
+      // Add event listener to form submit
+      document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function (event) {
+          trimInputValues();
+        });
+      });
+    </script>
   </head>
   <body>
     <div class="wrapper">

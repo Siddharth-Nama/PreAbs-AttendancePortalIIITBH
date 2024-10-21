@@ -17,6 +17,25 @@
     />
     <!-- External CSS -->
     <link rel="stylesheet" href="../../static/login.css" />
+    <script>
+      // Function to trim input values before form submission
+      function trimInputValues() {
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+
+        // Trim leading and trailing spaces
+        emailInput.value = emailInput.value.trim();
+        passwordInput.value = passwordInput.value.trim();
+      }
+
+      // Add event listener to form submit
+      document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function (event) {
+          trimInputValues();
+        });
+      });
+    </script>
   </head>
   <body>
     <!-- Login Form -->

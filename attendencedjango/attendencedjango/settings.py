@@ -146,5 +146,7 @@ EMAIL_HOST_PASSWORD = 'yuod ewpb dycz wccg'
 DEFAULT_FROM_EMAIL = 'siddharthnama2003@gmail.com'
 
 
-# Example in settings.py
-SESSION_COOKIE_AGE = 1209600  # 2 weeks
+# Set the session timeout to, for example, 2 hours (7200 seconds)
+SESSION_COOKIE_AGE = 7200
+# CSRF token expiration time in seconds (e.g., 2 hours)
+CSRF_COOKIE_AGE = 7200

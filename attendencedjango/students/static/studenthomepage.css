@@ -1,10 +1,10 @@
 /* Container for the form and messages */
 .container {
   width: 100%;
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: #f7f0f0;
   border-radius: 8px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -42,7 +42,7 @@ h1 {
 }
 
 .input-group input {
-  width: 100%;
+  width: 90%;
   padding: 10px;
   margin-top: 8px;
   font-size: 1em;
@@ -56,7 +56,7 @@ h1 {
 }
 
 .submit-btn {
-  background-color: #4caf50;
+  background-color: #34b138;
   color: white;
   padding: 12px 24px;
   border: none;
@@ -105,3 +105,125 @@ h1 {
 .refresh-button:hover {
   background-color: darkgreen; /* Darker shade on hover */
 }
+
+.attendance-info {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f0f9ff;
+  border-left: 5px solid #007bff;
+  border-radius: 5px;
+}
+
+.attendance-info p {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.attendance-count {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #007bff;
+}
+.filter-section {
+  margin-bottom: 0px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 15px;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.button-group {
+  margin-top: 10px;
+}
+
+.submit-btn {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3;
+}
+.attendance-table {
+  width: 100%; 
+  table-layout: auto;
+  border-collapse: collapse;
+}
+
+.attendance-table th, .attendance-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+  width: auto; /* Ensure the columns adjust automatically */
+}
+
+.attendance-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.attendance-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+
+.attendance-summary {
+  font-size: 20px;
+  color: #333;
+  background-color: #f9f9f9;
+  padding: 10px;
+  border: 2px solid #007bff;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.attendance-summary .highlight {
+  color: #ff0000; /* You can choose any color to highlight the text */
+  font-size: 18px;
+  font-weight: bold;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+
+.blue-button {
+  display: inline-block;
+  background-color: #007bff; /* Blue color */
+  color: white;              /* White text color */
+  padding: 10px 20px;        /* Padding for button size */
+  text-align: center;        /* Center text */
+  text-decoration: none;     /* Remove underline */
+  font-size: 16px;           /* Increase font size */
+  border-radius: 5px;        /* Rounded corners */
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.blue-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+

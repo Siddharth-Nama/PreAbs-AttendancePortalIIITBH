@@ -2,10 +2,13 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from home.models import *
+from django.views.decorators.cache import never_cache
 
+@never_cache
 def home(request):
     return redirect('/accounts/login/')
 
+@never_cache
 def loginStudent(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -44,30 +47,34 @@ def loginStudent(request):
 
     return render(request, 'login/login.html')
 
+@never_cache
 def logout_page(request):
     logout(request)
     return redirect('/accounts/login/')
 
-
+@never_cache
 def newRegistration(request):
     if request.method == 'POST':
-        
         first_name = request.POST.get('fname')
         last_name = request.POST.get('lname')
         username = request.POST.get('username')
         password = request.POST.get('password')
         email = request.POST.get('email')
-        roll_number = request.POST.get('rollno') 
+        roll_number = request.POST.get('rollno')
         mobile = request.POST.get('mobile')
+
+        # Validate username
         if not username:
             messages.error(request, "Username is required")
             return redirect('/newRegistration/')
 
+        # Check if the username already exists
         if User.objects.filter(username=username).exists():
             messages.info(request, "Username already taken")
             return redirect('/newRegistration/')
-        
-        if User.objects.filter(roll_number=roll_number).exists():
+
+        # Check if the roll number already exists in the Student model
+        if Student.objects.filter(roll_number=roll_number).exists():
             messages.info(request, "Roll Number already taken")
             return redirect('/newRegistration/')
 
@@ -81,15 +88,15 @@ def newRegistration(request):
         # Create the UserProfile linked to the user
         user_profile = UserProfile.objects.create(
             user=user,
-            user_type='student' 
+            user_type='student'  # Assuming it's a student registration
         )
 
-        # Create the Student profile 
+        # Create the Student profile linked to the UserProfile
         student = Student.objects.create(
-            user=user_profile,  # Linked to UserProfile, not User
-            roll_number=roll_number,  
+            user=user_profile,  # Linked to UserProfile, not User directly
+            roll_number=roll_number,
             mobile=mobile,
-            image=None  
+            image=None  # You can update this to handle image uploads later
         )
 
         # Save both models

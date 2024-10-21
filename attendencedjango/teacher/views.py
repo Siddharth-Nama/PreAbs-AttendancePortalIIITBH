@@ -6,7 +6,9 @@ import random
 import string
 from datetime import datetime, timedelta
 from django.utils import timezone
+from django.views.decorators.cache import never_cache
 
+@never_cache
 @login_required
 def TeacherSection(request):
     subjects = Subject.objects.all()
@@ -23,11 +25,12 @@ def generate_unique_code():
             print("code----------------------->", code)
             return code
 
+@never_cache
 @login_required
 def attendanceSubject(request):
     if request.method == "POST":
         coursecode = request.POST.get("class")
-        alert_message = None
+
         expiry_time = None
         unique_code = None  
         subjectname = None
@@ -63,7 +66,7 @@ def attendanceSubject(request):
         if existing_session:
             # If an active session exists, return the existing code
             unique_code = existing_session.code
-            alert_message = 'An active session already exists for this subject.'
+
         else:
             # No active session, generate a new code
             unique_code = generate_unique_code()
@@ -78,10 +81,48 @@ def attendanceSubject(request):
                 code=unique_code,
                 expires_at=expiry_time
             )
+
+        pending_students = Attendance.objects.filter(status='Pending', class_session__code=unique_code)
+
+        unique_students = {}
+        for attendance in pending_students:
+            if attendance.student.id not in unique_students:
+                unique_students[attendance.student.id] = {
+                    'user': attendance.student.user,
+                    'roll_number': attendance.student.roll_number,
+                }
+
+        # Convert unique_students dictionary to a list
+        students = list(unique_students.values())
+
         return render(request, 'attendencePageforTeacher.html', {
             'subjectname': subjectname,
             'coursecode': coursecode,
             'unique_code': unique_code,  
-            'alert_message': alert_message, 
             'expiry_time': expiry_time,
+            'pendingStudents': students,
         })
+    
+    subjects = Subject.objects.all()
+    return render(request, 'attendencePageforTeacher.html', {'subjects': subjects})
+
+@never_cache
+def submit_attendance(request):
+    status = request.POST.get("attendance_radio")
+    unique_code = request.POST.get('unique_code')
+    pending_students = Attendance.objects.filter(status='Pending', class_session__code=unique_code)
+
+    if status == 'Allpresent':
+        for attendance in pending_students:
+            attendance.status = 'Present'
+            attendance.save()
+    else:
+        
+        for attendance in pending_students:
+            if status == 'present':
+                attendance.status = 'Present'
+            elif status == 'absent':
+                attendance.status = 'Absent'
+            attendance.save()
+
+    return redirect('TeacherSection')

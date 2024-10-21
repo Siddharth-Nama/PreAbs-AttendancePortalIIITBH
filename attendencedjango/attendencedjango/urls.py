@@ -8,7 +8,7 @@ urlpatterns = [
     path('',home,name="home"),
     path('api/', include('home.urls')),  
     path('Teacher/', include('teacher.urls')),  
-    path('Teacher/', include('students.urls')),  
+    path('StudentSection/', include('students.urls')),  
     path('accounts/login/', loginStudent, name="loginStudent"),
     path('newRegistration/', newRegistration, name="newRegistration"),
     path('TeacherSection/', TeacherSection, name="TeacherSection"),

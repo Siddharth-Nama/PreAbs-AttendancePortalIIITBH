@@ -1,119 +1,106 @@
-/* Global Styles */
-* {
+/* General Styles */
+body {
+    font-family: 'Inter', sans-serif;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
-}
-
-body {
-    background-color: #f8f9fa;
-}
-
-.dashboard-container {
-    display: flex;
-    flex-direction: row;
-    min-height: 100vh;
-}
-
-/* Main Content Area */
-.main-content { 
-    padding: 40px;
-    background-color: #fff;
-    width: 100%;
-}
-
-.header {
-    border-bottom: 1px solid #e0e0e0;
-    padding-bottom: 20px;
-    margin-bottom: 30px;
-}
-
-.header h1 {
-    font-size: 2.5em;
-    font-weight: 600;
-    color: #333;
-}
-
-.header p {
-    font-size: 1.2em;
-    color: #666;
-}
-
-/* QR Code Section */
-.qr-code-section {
-    max-width: 600px;
+    background-color: #f4f4f9;
+  }
+  
+  .dashboard-container {
+    max-width: 1200px;
     margin: 0 auto;
-    text-align: center;
-}
-
-.qr-form {
-    background-color: #f1f3f5;
+    padding: 20px;
+  }
+  
+  .header {
+    background-color: #007bff;
+    color: white;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.qr-form label {
+    text-align: center;
+  }
+  
+  .alert {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    margin: 20px 0;
+    border-radius: 5px;
+  }
+  
+  /* Section Styles */
+  section {
+    margin-top: 20px;
+  }
+  
+  /* Form Styles */
+  .qr-form,
+  .attendance-form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  label {
     display: block;
-    font-size: 1.2em;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
+    font-weight: 500;
     color: #333;
-}
-
-.qr-form select {
+  }
+  
+  select {
     width: 100%;
-    padding: 12px;
-    font-size: 1em;
-    margin-bottom: 20px;
+    padding: 10px;
+    margin-bottom: 15px;
     border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.qr-form .generate-btn {
-    width: 100%;
-    padding: 12px;
-    background-color: #007BFF;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  button {
+    background-color: #007bff;
     color: white;
+    padding: 10px 15px;
     border: none;
-    border-radius: 4px;
-    font-size: 1.2em;
-    font-weight: 600;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.qr-form .generate-btn:hover {
+    font-size: 16px;
+    margin-top: 10px;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+  
+  button:hover {
     background-color: #0056b3;
-}
-
-.qr-code-display {
-    margin-top: 30px;
-}
-
-.qr-code-display img {
-    max-width: 100%;
-    border: 2px solid #007BFF;
-    border-radius: 8px;
-    padding: 5px;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
+    transform: scale(1.05);
+  }
+  
+  /* Specific button for downloading */
+  .download-btn {
+    margin-right: 10px; /* Space between download buttons */
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
     .main-content {
-        padding: 20px;
+      margin-left: 0; /* Reset margin for smaller screens */
     }
-    .header h1 {
-        font-size: 2em;
+  
+    .header {
+      font-size: 24px; /* Smaller header font size for mobile */
     }
-
-    .qr-form {
-        padding: 15px;
+  
+    .alert {
+      font-size: 14px; /* Font size for alert on mobile */
     }
-
-    .qr-form select, .qr-form .generate-btn {
-        font-size: 1em;
+  
+    button {
+      width: 100%; /* Full-width buttons on mobile */
+      margin: 5px 0; /* Stack buttons on mobile */
     }
-}
-/* Other styles remain unchanged */
-
+  
+    select {
+      font-size: 14px; /* Adjust font size for smaller screens */
+    }
+  }
+  

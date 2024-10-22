@@ -2,246 +2,204 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Student Homepage</title>
     <link rel="stylesheet" href="../static/studenthomepage.css" />
     <link
-      href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css"
-      rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css"
+        rel="stylesheet"
     />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
     <style>
-      .filterbutton{
-        width: 35%;
-
-      }
-      #subject {
-        width: 200px; /* Adjust the width as per your requirement */
-        padding: 7px; /* Optional: Increase padding for a bigger look */
-        font-size: 16px; /* Optional: Increase font size for better readability */
-    }
-      .calendar-container {
-        width: 100%;
-        margin: 20px auto;
-      }
-      .subject-filter {
-        margin-bottom: 20px;
-        text-align: center;
-        font-size: 20px;
-        width: 65%;
-      }
-      .fc-day.present {
-        background-color: green !important;
-      }
-      .fc-day.absent {
-        background-color: red !important;
-      }
-      .fc-day.pending {
-        background-color: grey !important;
-      }
+        .filterbutton {
+            width: 35%;
+        }
+        #subject {
+            width: 200px; /* Adjust the width as per your requirement */
+            padding: 7px; /* Optional: Increase padding for a bigger look */
+            font-size: 16px; /* Optional: Increase font size for better readability */
+        }
+        .calendar-container {
+            width: 100%;
+            margin: 20px auto;
+        }
+        .subject-filter {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 20px;
+            width: 65%;
+        }
+        .fc-day.present {
+            background-color: green !important;
+        }
+        .fc-day.absent {
+            background-color: red !important;
+        }
+        .fc-day.pending {
+            background-color: grey !important;
+        }
+        .carousel-inner {
+            display: flex;
+            flex-direction: column;
+        }
+        .carousel-item {
+            padding: 15px; /* Add some padding for better visuals */
+        }
+        .table {
+            margin: 0; /* Remove default margins */
+            width: 100%; /* Ensure table takes full width */
+        }
     </style>
     <script>
-      // Function to trim the class_code input before form submission
-      function trimInputValues() {
-        const classCodeInput = document.getElementById("class_code");
+        // Function to trim the class_code input before form submission
+        function trimInputValues() {
+            const classCodeInput = document.getElementById("class_code");
 
-        // Trim leading and trailing spaces
-        classCodeInput.value = classCodeInput.value.trim();
-      }
+            // Trim leading and trailing spaces
+            classCodeInput.value = classCodeInput.value.trim();
+        }
 
-      // Add event listener to form submit
-      document.addEventListener("DOMContentLoaded", function () {
-        const form = document.querySelector("form");
-        form.addEventListener("submit", function (event) {
-          trimInputValues();
+        // Add event listener to form submit
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector("form");
+            form.addEventListener("submit", function (event) {
+                trimInputValues();
+            });
         });
-      });
     </script>
-  </head>
-  <body>
+</head>
+<body>
     <div class="container">
-      {% csrf_token %}
-      <h2>Hi, {{ first_name }} !</h2>
-      <p class="instruction">
-        Please enter the class code provided by your teacher to submit your
-        attendance.
-      </p>
-      <form action="{% url 'StudentSection' %}" method="POST">
-        {% csrf_token %}
-        <div class="message-box">
-          {% if messages %} {% for message in messages %}
-          <p class="message {{ message.tags }}">{{ message }}</p>
-          {% endfor %} {% endif %}
-        </div>
-        <div class="input-group">
-          <label for="class_code">Enter Class Code:</label>
-          <input
-            type="text"
-            id="class_code"
-            name="class_code"
-            placeholder="Enter your unique class code"
-            required
-          />
-        </div>
-        <div class="button-group">
-          <button type="submit" class="submit-btn">Submit</button>
-        </div>
-
-        <!-- <button class="refresh-button" onclick="refreshPage()">Refresh Page</button> -->
-
-        <!-- Attendance Summary -->
-        <p class="attendance-summary">
-          You have attended
-          <strong class="highlight">{{ total_attended_today }}</strong> out of
-          <strong class="highlight">{{ total_attendance_today }}</strong>
-          classes today.
+        <h2>Hi, {{ first_name }}!</h2>
+        <p class="instruction">
+            Please enter the class code provided by your teacher to submit your attendance.
         </p>
-      </form>
-      <hr />
-      <br />
-      <!-- Filter Form -->
-      <div style="margin-bottom: 0px" class="filter-section">
-        <form method="GET" action="{% url 'StudentSection' %}" id="filter-form">
-          <div class="filter-row">
-            <div class="filter-group">
-              <label for="start_date">Start Date:</label>
-              <input type="date" id="start_date" name="start_date" />
+        <form action="{% url 'StudentSection' %}" method="POST">
+            {% csrf_token %}
+            <div class="message-box">
+                {% if messages %} 
+                {% for message in messages %}
+                <p class="message {{ message.tags }}">{{ message }}</p>
+                {% endfor %} 
+                {% endif %}
             </div>
-            <div class="filter-group">
-              <label for="end_date">End Date:</label>
-              <input type="date" id="end_date" name="end_date" />
-            </div>
-            <div class="filter-group">
-              <label for="subject">Select Subject:</label>
-              <select id="subject" name="subject">
-                <option value="">All Subjects</option>
-                {% for subject in subjects %}
-                <option value="{{ subject.id }}">
-                  {{ subject.subjectname }}
-                </option>
-                {% endfor %}
-              </select>
+            <div class="input-group">
+                <label for="class_code">Enter Class Code:</label>
+                <input
+                    type="text"
+                    id="class_code"
+                    name="class_code"
+                    placeholder="Enter your unique class code"
+                    required
+                />
             </div>
             <div class="button-group">
-              <button type="submit" class="submit-btn">Apply Filter</button>
+                <button type="submit" class="submit-btn">Submit</button>
             </div>
-          </div>
+  <br>
+            <!-- Attendance Summary -->
+            <p class="attendance-summary">
+                You have attended
+                <strong class="highlight">{{ total_attended_today }}</strong> out of
+                <strong class="highlight">{{ total_attendance_today }}</strong>
+                classes today.
+            </p>
         </form>
-      </div>
-
-      <!-- Attendance Table -->
-      <div class="attendance-table">
-        <table style="border: 0.5px solid rgb(79, 76, 76)">
-          <thead>
-            <tr>
-              <th>S. No.</th>
-              <th>Class Date</th>
-              <th>Subject Name</th>
-              <th>Status</th>
-              <th>Total Attendance(%)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for record in attendance_records %}
-            <tr>
-              <td>{{ record.subject.attendance_percentage|floatformat:2 }}%</td>
-              <td>{{ forloop.counter }}</td>
-              <td>{{ record.date }}</td>
-              <td>{{ record.subject.subjectname }}</td>
-              <td>{{ record.status }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-              <td colspan="4">No attendance records found.</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-
-      <hr />
-      <!-- <a href="attendanceCalender/" class="blue-button"
-        >Get Attendance Calender of Subject</a
-      > -->
-      <form action="{% url 'get_attendance' %}" method="POST">
-        {% csrf_token %}
-      <div style="width: 100%; text-align: center">
-        <h2>Subject-wise Attendance Calendar</h2>
-      </div>
-
-      <script>
-        function refreshPage() {
-          location.reload();
-        }
-      </script>
-      <div style="display: flex;">
-        <div class="subject-filter">
-          <label for="subject">Select Subject: </label>
-          <select id="subject" name="subject" onchange="filterCalendar()" required>
-            <option value="" selected>Select Subject</option>
-            {% for sub in subjects %}
-            <option value="{{ sub.coursecode }}">
-              {{ sub.subjectname }} - {{ sub.coursecode }}
-            </option>
-            {% endfor %}
-          </select>
+        <hr />
+        <br />
+        <!-- Filter Form -->
+        <div style="margin-bottom: 0px" class="filter-section">
+            <form method="GET" action="{% url 'StudentSection' %}" id="filter-form">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="start_date">Start Date:</label>
+                        <input type="date" id="start_date" name="start_date" />
+                    </div>
+                    <div class="filter-group">
+                        <label for="end_date">End Date:</label>
+                        <input type="date" id="end_date" name="end_date" />
+                    </div>
+                    <div class="filter-group">
+                        <label for="subject">Select Subject:</label>
+                        <select id="subject" name="subject">
+                            <option value="">All Subjects</option>
+                            {% for subject in subjects %}
+                            <option value="{{ subject.id }}">
+                                {{ subject.subjectname }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit" class="submit-btn">Apply Filter</button>
+                    </div>
+                </div>
+            </form>
         </div>
-          <div class="filterbutton">
-            <button type="submit" class="submit-btn">Apply Filter</button>
+
+        <!-- Attendance Table -->
+
+        <div id="attendanceCarousel" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner">
+              {% for record in attendance_records %}
+              <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                  <div class="table-responsive">
+                      <table class="table" style="border: 2px solid black">
+                          <thead class="table-light">
+                              <tr>
+                                  <th style="border: 2px solid black" class="text-center">S. No.</th>
+                                  <th style="border: 2px solid black" class="text-center">Class Date</th>
+                                  <th style="border: 2px solid black" class="text-center">Subject Name</th>
+                                  <th style="border: 2px solid black" class="text-center">Status</th>
+                                  <th style="border: 2px solid black" class="text-center">Total Attendance(%)</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr>
+                                  <td style="border: 2px solid black" class="text-center">{{ forloop.counter }}</td>
+                                  <td style="border: 2px solid black" class="text-center">{{ record.date }}</td>
+                                  <td style="border: 2px solid black" class="text-center">{{ record.subject.subjectname }}</td>
+                                  <td style="border: 2px solid black" class="text-center">{{ record.status }}</td>
+                                  <td style="border: 2px solid black" class="text-center">{{ record.subject.attendance_percentage|floatformat:2 }}%</td>
+                              </tr>
+                              {% empty %}
+                              <tr>
+                                  <td colspan="5" class="text-center">No attendance records found.</td>
+                              </tr>
+                              {% endfor %}
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
           </div>
+       
+          <!-- Carousel controls -->
+          <a class="carousel-control-prev" href="#attendanceCarousel" role="button" data-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#attendanceCarousel" role="button" data-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="sr-only">Next</span>
+          </a>
       </div>
-      <div class="calendar-container">
-        <div id="calendar"></div>
-      </div>
-      </form>
-      <script>
-        // Initialize the calendar without any colored events
-        document.addEventListener("DOMContentLoaded", function () {
-          const calendarEl = document.getElementById("calendar");
+      
+        <hr />
+        <script>
+            function refreshPage() {
+                location.reload();
+            }
+        </script>
+        <!-- <a href="attendanceCalender/" class="blue-button"
+            >Get Attendance Calender of Subject</a
+        >-->
 
-          const calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: "dayGridMonth",
-            headerToolbar: {
-              left: "prev,next",
-              center: "title",
-              right: "dayGridMonth",
-            },
-            height: "auto",
-            events: [], // No events initially
-          });
-
-          calendar.render();
-        });
-
-        // Function to refresh the calendar when a subject is selected
-        function filterCalendar() {
-          const subjectId = document.getElementById("subject").value;
-
-          if (subjectId) {
-            const calendarEl = document.getElementById("calendar");
-            const calendar = FullCalendar.getCalendar(calendarEl);
-
-            calendar.removeAllEvents(); // Clear the calendar
-
-            // Fetch attendance data for the selected subject
-            fetch(`/attendance/get_attendance/?subject_id=${subjectId}`)
-              .then((response) => response.json())
-              .then((data) => {
-                const events = data.map((item) => ({
-                  title: item.status,
-                  start: item.date,
-                  classNames: [item.status.toLowerCase()], // present, absent, pending
-                }));
-
-                // Add the events with the appropriate status colors
-                calendar.addEventSource(events);
-                calendar.refetchEvents();
-              });
-          }
-        }
-      </script>
     </div>
-  </body>
+</body>
 </html>

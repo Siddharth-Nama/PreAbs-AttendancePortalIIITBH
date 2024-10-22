@@ -6,4 +6,5 @@ from students.views import *
 urlpatterns = [
     path('attendanceSubject/', attendanceSubject, name="attendanceSubject"),
     path('submit_attendance/', submit_attendance, name='submit_attendance'),
+path('downloadAttendance/', download_attendance, name='download_attendance'),
  ]

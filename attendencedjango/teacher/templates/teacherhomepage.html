@@ -15,8 +15,7 @@
     <div class="dashboard-container">
       <main class="main-content" style="margin-left: 0px">
         <header class="header">
-          <h1>Welcome, {{first_name}} {{last_name}}</h1>
-          <p>Select a class below to generate the Unique code for attendance.</p>
+          <h3>Welcome, {{first_name}} {{last_name}}</h3>
         </header>
         {% if messages %}
         <div class="alert alert-danger" role="alert">
@@ -28,7 +27,7 @@
           {% csrf_token %}
           <form class="qr-form" action="../Teacher/attendanceSubject/" method="POST">
             {% csrf_token %}
-              <label for="class-select">Select Class</label>
+              <label for="class-select">Select a class below to generate the Unique code for attendance.</label>
               <select id="class-select" name="class">
                   <option value="0"><--Select Option--></option>
                   {% for sub in subjects %}
@@ -39,6 +38,38 @@
               </select>
               <button type="submit" class="generate-btn">Generate Unique Code</button>
           </form>
+           <!-- New Section for Downloading PDFs -->
+        <section class="download-section">
+          <form class="attendance-form" action="../Teacher/downloadAttendance/" method="POST">
+            {% csrf_token %}
+            <label for="attendance-class-select">
+              Select a class to download attendance:
+
+            </label>
+            {% if messages %}
+        <div class="alert alert-danger" role="alert">
+          {% for message in messages %} {{ message }}<br />
+          {% endfor %}
+        </div>
+        {% endif %}
+            <select id="attendance-class-select" name="attendance_class">
+              <option value="0"><--Select Option--></option>
+              {% for sub in subjects %}
+              <option value="{{ sub.coursecode }}">
+                {{ sub.subjectname }} - {{ sub.coursecode }}
+              </option>
+              {% endfor %}
+            </select>
+
+            <!-- Buttons for downloading PDFs -->
+            <button type="submit" name="action" value="download_today" class="download-btn">
+              Download Today's Attendance
+            </button>
+            <button type="submit" name="action" value="download_all" class="download-btn">
+              Download All Student Attendance
+            </button>
+          </form>
+        </section>
       </section>
       </main>
     </div>

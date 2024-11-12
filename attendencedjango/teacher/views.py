@@ -6,15 +6,55 @@ from home.models import *
 import random
 import string
 from datetime import datetime, timedelta
+import datetime
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
 import pandas as pd  # For handling data and exporting to PDF or other formats
 from django.template.loader import get_template
 from weasyprint import HTML
 from django_renderpdf.views import PDFView
-from django.core.files.base import ContentFile
 from io import BytesIO
 from xhtml2pdf import pisa
+
+
+from dateutil.relativedelta import relativedelta
+import datetime
+from home.models import Attendance, Subject
+
+def calculate_attendance_percentages_for_students(students, subjects):
+    # Dictionary to store attendance percentage for each student by subject
+    student_subject_percentages = {}
+    start_date_8_months_ago = datetime.date.today() - relativedelta(months=8)
+    end_date_today = datetime.date.today()
+
+    for student in students:
+        subject_percentages = {}
+        for subject in subjects:
+            # Get total classes for the student in the given period for the subject
+            total_classes_in_period = Attendance.objects.filter(
+                student=student,
+                subject=subject,
+                date__range=[start_date_8_months_ago, end_date_today]
+            ).count()
+
+            # Get the number of present classes for the student in the given period for the subject
+            present_classes_in_period = Attendance.objects.filter(
+                student=student,
+                subject=subject,
+                status='Present',
+                date__range=[start_date_8_months_ago, end_date_today]
+            ).count()
+
+            # Calculate percentage
+            percentage = int((present_classes_in_period / total_classes_in_period) * 100) if total_classes_in_period > 0 else 0
+            
+            # Store the percentage in the dictionary
+            subject_percentages[subject.id] = percentage
+
+        # Store the subject percentages for each student
+        student_subject_percentages[student.id] = subject_percentages
+
+    return student_subject_percentages
 
 @never_cache
 @login_required
@@ -26,27 +66,16 @@ def TeacherSection(request):
     }
     return render(request, 'teacherhomepage.html', context)
 
-class AttendancePDFView(PDFView):
-    template_name = 'attendance_today.html'  # Template for today's attendance
+def render_to_pdf(template_src, context_dict):
+    template = get_template(template_src)
+    html = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        return result.getvalue()
+    return None
 
-    def get_context_data(self, *args, **kwargs):
-        attendance_data = kwargs.get('attendance_data', [])
-        date = kwargs.get('date')
-        context = super().get_context_data(*args, **kwargs)
-        context.update({
-            'attendance_data': attendance_data,
-            'date': date,
-        })
-        return context
 
-def render_to_pdf(template_src, context_dict={}):
-	template = get_template(template_src)
-	html  = template.render(context_dict)
-	result = BytesIO()
-	pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
-	if not pdf.err:
-		return HttpResponse(result.getvalue(), content_type='application/pdf')
-	return None
 
 @never_cache
 @login_required
@@ -55,49 +84,60 @@ def download_attendance(request):
         action = request.POST.get('action')
         attendance_class = request.POST.get('attendance_class')
 
+        try:
+            subject = Subject.objects.get(coursecode=attendance_class)  # Fetch subject based on course code
+        except Subject.DoesNotExist:
+            messages.error(request, "Subject with the given course code does not exist.")
+            return redirect('TeacherSection')
+        
+        today = datetime.datetime.today().date() 
+        current_year = today.year
+
         if attendance_class != '0':
-            # Fetch attendance data based on the selected class
             attendance_data = Attendance.objects.filter(subject__coursecode=attendance_class)
-            # Calculate date range
-            today = datetime.today().date()
-            eight_months_ago = today - timedelta(days=8*30)  # Approximate 8 month
-
+            eight_months_ago = today - timedelta(days=8 * 30)
+            
             if action == 'download_today':
-                today = datetime.today().date()
                 today_attendance = attendance_data.filter(date=today)
-
-                # Generate PDF for today's attendance
-                response = AttendancePDFView.as_view()(request, attendance_data=today_attendance, date=today)
-                response['Content-Disposition'] = 'attachment; filename="today_attendance.pdf"'
-                return response
+                context = {'attendance_data': today_attendance, 'date': today}
+                
+                # Render and create PDF
+                pdf_content = render_to_pdf('attendance_today.html', context)
+                if pdf_content:
+                    filename1 = f"{subject.subjectname.replace(' ', '')}_{today}.pdf"  # Generate filename
+                    response = HttpResponse(pdf_content, content_type='application/pdf')
+                    response['Content-Disposition'] = f'attachment; filename="{filename1}"'
+                    return response
 
             elif action == 'download_all':
-                # Filter attendance data for the date range
                 filtered_attendance_data = attendance_data.filter(date__range=[eight_months_ago, today])
 
-                # Create a PDF report for all attendance in the specified date range
-                template = get_template('attendance_all.html')  # Ensure this template exists
-                context = {'attendance_data': filtered_attendance_data, 'start_date': eight_months_ago, 'end_date': today}
-                html = template.render(context)
+                distinct_students = filtered_attendance_data.values('student').distinct()
+                students = [attendance['student'] for attendance in distinct_students]
 
-
-                pdf_file = HTML(string=html).write_pdf()
-
-                # Generate PDF and return it as a response
-                response = HttpResponse(content_type='application/pdf')
-                response['Content-Disposition'] = 'attachment; filename="all_attendance.pdf"'
-
-                # Generate PDF
-                response.write(pdf_file)
-                return response
+                # Calculate attendance percentages for students
+                subject_percentages = calculate_attendance_percentages_for_students(students, [subject])
+                # Prepare data for the PDF with percentages
+                context = {
+                 'attendance_data': filtered_attendance_data,
+                 'subject': subject,
+                 'percentages': subject_percentages, 
+                 'date': today if action == 'download_today' else None,
+                 'start_date': eight_months_ago,
+                 'end_date': today,
+                }
+                
+                # Render and create PDF
+                pdf_content = render_to_pdf('attendance_all.html', context)
+                if pdf_content:
+                    filename = f"{subject.subjectname.replace(' ', '')}_{current_year}.pdf"  # Generate filename
+                    response = HttpResponse(pdf_content, content_type='application/pdf')
+                    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+                    return response
 
         else:
-            subjects = Subject.objects.all()
             messages.error(request, "Please select a valid subject.")
             return redirect('TeacherSection')
-
-        # Redirect back to the TeacherSection if no valid class is selected
-        return redirect('TeacherSection')
 
     return redirect('TeacherSection')
 

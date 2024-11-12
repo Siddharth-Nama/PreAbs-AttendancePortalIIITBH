@@ -205,7 +205,7 @@ h1 {
 
 .attendance-summary .highlight {
   color: #ff0000; /* You can choose any color to highlight the text */
-  font-size: 18px;
+  font-size: 25px;
   font-weight: bold;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 }

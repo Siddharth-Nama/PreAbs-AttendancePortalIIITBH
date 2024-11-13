@@ -1,102 +1,101 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8" />
     <title>All Attendance Records</title>
     <style>
-        /* General Styles */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            color: #333;
-        }
-        h1 {
-            text-align: center;
-            color: #007bff;
-            font-size: 24px;
-        }
-        p {
-            text-align: center;
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-        
-        /* Table Styles */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        th, td {
-            border: 1px solid #333;
-            padding: 5px;
-            padding-left: 0px;
-            font-size: 14px;
-        }
-        th {
-            background-color: #6799ce;
-            color: white;
-            font-weight: bold;
-            text-align: left;
-        }
-        
-        /* Column Widths */
-        .col-sn {
-            width: 11%;
-        }
-        .col-name {
-            width: 32%;
-        }
-        .col-roll {
-            width: 32%;
-        }
-        .col-percentage {
-            width: 25%;
-        }
+      /* General Styles */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        color: #333;
+      }
+      h1 {
+        text-align: center;
+        color: #007bff;
+        font-size: 24px;
+      }
+      p {
+        text-align: center;
+        font-size: 16px;
+        margin-bottom: 20px;
+      }
 
-        /* Row Colors */
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        tr:last-child td {
-            border-bottom: 1px solid #333;
-        }
-        
-        /* Empty State Row Style */
-        .empty-row td {
-            text-align: center;
-            font-style: italic;
-            color: #666;
-        }
+      /* Table Styles */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+      }
+      th,
+      td {
+        border: 1px solid #333;
+        padding: 5px;
+        padding-left: 0px;
+        font-size: 14px;
+      }
+      th {
+        background-color: #6799ce;
+        color: white;
+        font-weight: bold;
+        text-align: left;
+      }
+
+      /* Column Widths */
+      .col-sn {
+        width: 11%;
+      }
+      .col-name {
+        width: 32%;
+      }
+      .col-roll {
+        width: 32%;
+      }
+      .col-percentage {
+        width: 25%;
+      }
+
+      /* Row Colors */
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+      tr:last-child td {
+        border-bottom: 1px solid #333;
+      }
+
+      /* Empty State Row Style */
+      .empty-row td {
+        text-align: center;
+        font-style: italic;
+        color: #666;
+      }
     </style>
-</head>
-<body>
-    <h1>All Attendance Records</h1>
+  </head>
+  <body>
+    <h1>{{subject.subjectname}}({{subject.coursecode}}) Attendance Records</h1>
     <p>Attendance from {{ start_date }} to {{ end_date }}</p>
-    
+
     <table>
-        <thead>
-            <tr>
-                <th class="col-sn">Sno.</th>
-                <th class="col-name">Student Name</th>
-                <th class="col-roll">Roll No.</th>
-                <th class="col-percentage">Total Percentage</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for attendance in attendance_data %}
-            <tr>
-                <td class="col-sn">{{ loop.index }}</td>
-                <td class="col-name">{{attendance.student.user.first_name}} {{attendance.student.user.last_name}}</td>
-                <td class="col-roll">{{attendance.studnet.roll_number}}</td>
-                <td>{{ percentages.student.id.subject.id }}%</td>
-            </tr>
-            {% empty %}
-            <tr class="empty-row">
-                <td colspan="4">No attendance records found.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
+      <thead>
+        <tr>
+          <th class="col-sn">Sno.</th>
+          <th class="col-name">Student Name</th>
+          <th class="col-roll">Roll No.</th>
+          <th class="col-percentage">Total Percentage</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for attendance in attendance_data %}
+    <tr>
+        <td class="col-sn">{{ forloop.counter }}</td>
+        <td class="col-name">{{ attendance.first_name }} {{ attendance.last_name }}</td>
+        <td class="col-roll">{{ attendance.roll_number }}</td>
+        <td class="col-percentage">{{ attendance.percentage }}</td>
+    </tr>
+{% endfor %}
+
+    </tbody>
+    
     </table>
-</body>
+  </body>
 </html>

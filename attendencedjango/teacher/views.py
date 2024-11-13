@@ -15,46 +15,38 @@ from weasyprint import HTML
 from django_renderpdf.views import PDFView
 from io import BytesIO
 from xhtml2pdf import pisa
-
-
 from dateutil.relativedelta import relativedelta
-import datetime
-from home.models import Attendance, Subject
+from collections import defaultdict
 
-def calculate_attendance_percentages_for_students(students, subjects):
-    # Dictionary to store attendance percentage for each student by subject
-    student_subject_percentages = {}
-    start_date_8_months_ago = datetime.date.today() - relativedelta(months=8)
-    end_date_today = datetime.date.today()
+def calculate_attendance_percentages_for_students(roll_numbers, subjects):
+    # Dictionary to store percentages for each student and subject
+    attendance_percentages = defaultdict(lambda: defaultdict(int))
 
-    for student in students:
-        subject_percentages = {}
+    # Loop over each student
+    for roll_number in roll_numbers:
+        # Filter attendance records for the specific student and subjects
+        student_attendance_records = Attendance.objects.filter(
+            student__roll_number=roll_number,
+            subject__in=subjects
+        )
+
+        # Calculate attendance percentage for each subject
         for subject in subjects:
-            # Get total classes for the student in the given period for the subject
-            total_classes_in_period = Attendance.objects.filter(
-                student=student,
-                subject=subject,
-                date__range=[start_date_8_months_ago, end_date_today]
-            ).count()
+            total_classes = student_attendance_records.filter(subject=subject).count()
+            present_classes = student_attendance_records.filter(subject=subject, status="Present").count()
+            print("Total ------------------> ",total_classes)
+            print("Present ------------------> ",present_classes)
+            # Calculate percentage only if total classes are greater than zero to avoid division by zero
+            if total_classes > 0:
+                attendance_percentage = (present_classes / total_classes) * 100
+            else:
+                attendance_percentage = 0
 
-            # Get the number of present classes for the student in the given period for the subject
-            present_classes_in_period = Attendance.objects.filter(
-                student=student,
-                subject=subject,
-                status='Present',
-                date__range=[start_date_8_months_ago, end_date_today]
-            ).count()
+            # Store the result in the dictionary
+            attendance_percentages[roll_number][subject.coursecode] = round(attendance_percentage, 2)
 
-            # Calculate percentage
-            percentage = int((present_classes_in_period / total_classes_in_period) * 100) if total_classes_in_period > 0 else 0
-            
-            # Store the percentage in the dictionary
-            subject_percentages[subject.id] = percentage
+    return attendance_percentages
 
-        # Store the subject percentages for each student
-        student_subject_percentages[student.id] = subject_percentages
-
-    return student_subject_percentages
 
 @never_cache
 @login_required
@@ -99,8 +91,31 @@ def download_attendance(request):
             
             if action == 'download_today':
                 today_attendance = attendance_data.filter(date=today)
-                context = {'attendance_data': today_attendance, 'date': today}
                 
+                # Get distinct roll numbers with attendance status for today
+                distinct_students = today_attendance.values(
+                    'student__roll_number', 
+                    'student__user__user__first_name', 
+                    'student__user__user__last_name',
+                    'status'
+                ).distinct()
+
+                unique_students = [
+                    {
+                        'roll_number': student['student__roll_number'],
+                        'first_name': student['student__user__user__first_name'],
+                        'last_name': student['student__user__user__last_name'],
+                        'status': student['status']  # Fetch status for today
+                    }
+                    for student in distinct_students
+                ]
+                
+                context = {
+                    'attendance_data': unique_students,
+                    'date': today,
+                    'subject':subject
+                }
+                print("Today's Attendance Data:", context)
                 # Render and create PDF
                 pdf_content = render_to_pdf('attendance_today.html', context)
                 if pdf_content:
@@ -112,19 +127,40 @@ def download_attendance(request):
             elif action == 'download_all':
                 filtered_attendance_data = attendance_data.filter(date__range=[eight_months_ago, today])
 
-                distinct_students = filtered_attendance_data.values('student').distinct()
-                students = [attendance['student'] for attendance in distinct_students]
+                # Get distinct roll numbers with student details
+                distinct_students = filtered_attendance_data.values(
+                    'student__roll_number', 'student__user__user__first_name', 'student__user__user__last_name'
+                ).distinct()
 
-                # Calculate attendance percentages for students
-                subject_percentages = calculate_attendance_percentages_for_students(students, [subject])
-                # Prepare data for the PDF with percentages
+                unique_students = [
+                    {
+                        'roll_number': student['student__roll_number'],
+                        'first_name': student['student__user__user__first_name'],
+                        'last_name': student['student__user__user__last_name']
+                    }
+                    for student in distinct_students
+                ]
+
+                # Calculate attendance percentages for each unique student and subject
+                roll_numbers = [student['roll_number'] for student in unique_students]
+                subject_percentages = calculate_attendance_percentages_for_students(roll_numbers, [subject])
+
+                # Add attendance percentage to each student's data
+                attendance_data_with_percentages = [
+                    {
+                        'roll_number': student['roll_number'],
+                        'first_name': student['first_name'],
+                        'last_name': student['last_name'],
+                        'percentage': subject_percentages.get(student['roll_number'], {}).get(subject.coursecode, 0)
+                    }
+                    for student in unique_students
+                ]
+                # print("Attendance ----------------------> ",attendance_data_with_percentages)
                 context = {
-                 'attendance_data': filtered_attendance_data,
-                 'subject': subject,
-                 'percentages': subject_percentages, 
-                 'date': today if action == 'download_today' else None,
-                 'start_date': eight_months_ago,
-                 'end_date': today,
+                    'attendance_data': attendance_data_with_percentages,  # Includes student details and attendance percentage
+                    'subject': subject,
+                    'start_date': eight_months_ago,
+                    'end_date': today,
                 }
                 
                 # Render and create PDF

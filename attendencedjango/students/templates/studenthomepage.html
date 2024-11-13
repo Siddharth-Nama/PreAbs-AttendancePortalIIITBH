@@ -146,49 +146,50 @@
         <!-- Attendance Table -->
 
         <div id="attendanceCarousel" class="carousel slide" data-ride="carousel">
-          <div class="carousel-inner">
-              {% for record in attendance_records %}
-              <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                  <div class="table-responsive">
-                      <table class="table" style="border: 2px solid black">
-                          <thead class="table-light">
-                              <tr>
-                                  <th style="border: 2px solid black" class="text-center">S. No.</th>
-                                  <th style="border: 2px solid black" class="text-center">Class Date</th>
-                                  <th style="border: 2px solid black" class="text-center">Subject Name</th>
-                                  <th style="border: 2px solid black" class="text-center">Status</th>
-                                  <th style="border: 2px solid black" class="text-center">Total Attendance(%)</th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                              <tr>
-                                  <td style="border: 2px solid black" class="text-center">{{ forloop.counter }}</td>
-                                  <td style="border: 2px solid black" class="text-center">{{ record.date }}</td>
-                                  <td style="border: 2px solid black" class="text-center">{{ record.subject.subjectname }}</td>
-                                  <td style="border: 2px solid black" class="text-center">{{ record.status }}</td>
-                                  <td style="border: 2px solid black" class="text-center">{{ record.subject.attendance_percentage|floatformat:2 }}%</td>
-                              </tr>
-                              {% empty %}
-                              <tr>
-                                  <td colspan="5" class="text-center">No attendance records found.</td>
-                              </tr>
-                              {% endfor %}
-                          </tbody>
-                      </table>
-                  </div>
-              </div>
-          </div>
-       
-          <!-- Carousel controls -->
-          <a class="carousel-control-prev" href="#attendanceCarousel" role="button" data-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="sr-only">Previous</span>
-          </a>
-          <a class="carousel-control-next" href="#attendanceCarousel" role="button" data-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="sr-only">Next</span>
-          </a>
-      </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="table-responsive">
+                        <table class="table" style="border: 2px solid black">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="border: 2px solid black" class="text-center">S. No.</th>
+                                    <th style="border: 2px solid black" class="text-center">Class Date</th>
+                                    <th style="border: 2px solid black" class="text-center">Subject Name</th>
+                                    <th style="border: 2px solid black" class="text-center">Status</th>
+                                    <th style="border: 2px solid black" class="text-center">Total Attendance(%)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for record in attendance_records %}
+                                    <tr>
+                                        <td style="border: 2px solid black" class="text-center">{{ forloop.counter }}</td>
+                                        <td style="border: 2px solid black" class="text-center">{{ record.date }}</td>
+                                        <td style="border: 2px solid black" class="text-center">{{ record.subject.subjectname }}</td>
+                                        <td style="border: 2px solid black" class="text-center">{{ record.status }}</td>
+                                        <td style="border: 2px solid black" class="text-center">{{ record.subject.attendance_percentage|floatformat:2 }}%</td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="5" class="text-center">No attendance records found.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Carousel controls -->
+            <a class="carousel-control-prev" href="#attendanceCarousel" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#attendanceCarousel" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+        
       
         <hr />
         <script>

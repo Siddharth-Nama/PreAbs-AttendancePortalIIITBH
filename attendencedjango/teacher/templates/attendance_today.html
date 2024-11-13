@@ -1,45 +1,99 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <title>Today's Attendance</title>
+  <head>
+    <meta charset="utf-8" />
+    <title>All Attendance Records</title>
     <style>
-        /* Add some styling for the PDF */
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #000;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #007bff;
-            color: white;
-        }
+      /* General Styles */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        color: #333;
+      }
+      h1 {
+        text-align: center;
+        color: #007bff;
+        font-size: 24px;
+      }
+      p {
+        text-align: center;
+        font-size: 16px;
+        margin-bottom: 20px;
+      }
+
+      /* Table Styles */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+      }
+      th,
+      td {
+        border: 1px solid #333;
+        padding: 5px;
+        padding-left: 0px;
+        font-size: 14px;
+      }
+      th {
+        background-color: #6799ce;
+        color: white;
+        font-weight: bold;
+        text-align: left;
+      }
+
+      /* Column Widths */
+      .col-sn {
+        width: 11%;
+      }
+      .col-name {
+        width: 32%;
+      }
+      .col-roll {
+        width: 32%;
+      }
+      .col-percentage {
+        width: 25%;
+      }
+
+      /* Row Colors */
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+      tr:last-child td {
+        border-bottom: 1px solid #333;
+      }
+
+      /* Empty State Row Style */
+      .empty-row td {
+        text-align: center;
+        font-style: italic;
+        color: #666;
+      }
     </style>
-</head>
-<body>
-    <h1>Attendance for {{ date }}</h1>
+  </head>
+  <body>
+    <h1>Today Attendance Records for subject : {{subject.subjectname}}({{subject.coursecode}})</h1>
     <table>
-        <thead>
-            <tr>
-                <th>Student Name</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for attendance in attendance_data %}
-            <tr>
-                <td>{{ attendance.student.name }}</td>
-                <td>{{ attendance.status }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
+      <thead>
+        <tr>
+          <th class="col-sn">Sno.</th>
+          <th class="col-name">Student Name</th>
+          <th class="col-roll">Roll No.</th>
+          <th class="col-percentage">Percentage Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for attendance in attendance_data %}
+    <tr>
+        <td class="col-sn">{{ forloop.counter }}</td>
+        <td class="col-name">{{ attendance.first_name }} {{ attendance.last_name }}</td>
+        <td class="col-roll">{{ attendance.roll_number }}</td>
+        <td class="col-percentage">{{ attendance.status }}</td>
+    </tr>
+{% endfor %}
+
+    </tbody>
+    
     </table>
-</body>
+  </body>
 </html>

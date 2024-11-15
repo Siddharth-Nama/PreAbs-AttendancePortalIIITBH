@@ -1,0 +1,154 @@
+body {
+    background-image: linear-gradient(135deg, #FAB2FF 10%, #1904E5 100%);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: "Open Sans", sans-serif;
+    color: #333333;
+    margin: 0;
+    padding: 0;
+}
+
+.box-form {
+    margin: 20px auto;
+    width: 90%;
+    max-width: 1200px;
+    background: #FFFFFF;
+    
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-between;
+    box-shadow: 0 0 20px 6px #090b6f85;
+    padding: 0;
+    overflow: hidden;
+}
+
+@media (max-width: 980px) {
+    .box-form {
+        flex-direction: column;
+    }
+}
+
+.box-form .left {
+    flex: 1;
+    background-image: url("./images/backgroundImage.png");
+    margin: 1%;
+    background-size: cover;
+    background-position: center;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.box-form .overlay {
+    padding: 30px;
+    background: rgba(116, 123, 248, 0.67);
+    text-align: center;
+    width: 100%;
+}
+
+.box-form .overlay h1 {
+    font-size: 4vw;
+    line-height: 1.2;
+    font-weight: 900;
+    margin: 20px 0;
+}
+
+.box-form .overlay p {
+    font-size: 1em;
+    margin-top: 20px;
+    font-weight: 400;
+    color: #000;
+}
+
+.box-form .right {
+    flex: 1;
+    padding: 40px;
+    background: #f9f9f9;
+}
+
+@media (max-width: 980px) {
+    .box-form .right {
+        padding: 20px;
+        background-image: url("./backgroundImage.png");
+        background-size: contain; 
+        background-position: center; 
+        background-repeat: no-repeat; 
+    }
+}
+
+.box-form .right h5 {
+    font-size: 3vw;
+    line-height: 1.2;
+    font-weight: 1000;
+    margin-bottom: 10px;
+}
+
+.box-form .right p {
+    font-size: 14px;
+    color: #82868e;
+    margin-bottom: 20px;
+}
+
+.box-form .right .inputs {
+    margin-top: 20px;
+}
+
+.box-form .right input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.box-form .right{
+    text-align: left;
+    margin-top: 10px;
+}
+
+.box-form .right{
+    color: #1dcaff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.box-form .right button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 50px;
+    border: 0;
+    outline: 0;
+    box-shadow: 0px 4px 20px 0px #4c6074;
+    background-image: linear-gradient(135deg, #4c6074 1%, #3c556d 100%);
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background 0.3s ease;
+}
+
+.box-form .right button:hover {
+    background-image: linear-gradient(135deg, #375573 5%, #3c556d 100%);
+}
+        
+.college-heading {
+    color: #3c556d; /* Dark blue-gray color */
+    font-family: 'Montserrat', sans-serif;  /* Clean and modern font */
+    font-size: 24px; /* Slightly larger font size */
+    letter-spacing: 2px; /* Increase spacing between letters */
+    margin: 0; /* Remove default margin */
+    display: inline-block; /* Make the heading fit content width */
+}
+
+
+
+.select{
+    padding: 10px;
+}
